@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <UserSecretsId>simpletradebot-grid</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleTradeBot.Bybit\SimpleTradeBot.Bybit.csproj" />
+    <ProjectReference Include="..\SimpleTradeBot.Core\SimpleTradeBot.Core.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SimpleTradeBot — Bybit grid</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">
+        <span class="logo">⊞</span>
+        <div>
+            <div class="brand-title">SimpleTradeBot</div>
+            <div class="brand-sub">Bybit · сеточная стратегия</div>
+        </div>
+    </div>
+
+    <div class="topbar-state">
+        <span id="symbol" class="chip chip-symbol">—</span>
+        <span id="environment" class="chip">—</span>
+        <span id="status" class="chip">—</span>
+        <div class="price">
+            <span id="price">—</span>
+            <small id="tickAge">нет данных</small>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="btnStart" class="btn btn-start">Запустить</button>
+        <button id="btnClose" class="btn btn-close">Закрыть позицию</button>
+        <button id="btnStop" class="btn btn-stop">Остановить</button>
+    </div>
+</header>
+
+<div id="banner" class="banner hidden"></div>
+
+<main>
+    <section class="cards">
+        <article class="card">
+            <h2>Позиция</h2>
+            <dl>
+                <div><dt>Сторона</dt><dd id="posSide">—</dd></div>
+                <div><dt>Объём</dt><dd id="posVolume">—</dd></div>
+                <div><dt>Средняя входа</dt><dd id="posAverage">—</dd></div>
+                <div><dt>Открытый P&amp;L</dt><dd id="posUnrealized" class="num">—</dd></div>
+                <div><dt>Реализовано</dt><dd id="posRealized" class="num">—</dd></div>
+                <div><dt>Комиссии</dt><dd id="posFees" class="num">—</dd></div>
+                <div class="total"><dt>Итого</dt><dd id="posNet" class="num">—</dd></div>
+            </dl>
+        </article>
+
+        <article class="card">
+            <h2>Риск</h2>
+            <dl>
+                <div><dt>Тейк-профит</dt><dd id="riskTake">—</dd></div>
+                <div><dt>Стоп-лосс</dt><dd id="riskStop">—</dd></div>
+                <div><dt>Трейлинг</dt><dd id="riskTrailing">—</dd></div>
+                <div><dt>Экстремум</dt><dd id="riskExtreme">—</dd></div>
+                <div><dt>Занято объёма</dt><dd id="riskCommitted">—</dd></div>
+                <div><dt>Лимит объёма</dt><dd id="riskLimit">—</dd></div>
+            </dl>
+        </article>
+
+        <article class="card">
+            <h2>Цикл сетки</h2>
+            <dl>
+                <div><dt>Номер цикла</dt><dd id="cycleNum">—</dd></div>
+                <div><dt>Направление</dt><dd id="cycleDirection">—</dd></div>
+                <div><dt>Цена построения</dt><dd id="cycleAnchor">—</dd></div>
+                <div><dt>Шаг сетки</dt><dd id="cycleStep">—</dd></div>
+                <div><dt>Уровней</dt><dd id="cycleLevels">—</dd></div>
+                <div><dt>Запущен</dt><dd id="cycleStarted">—</dd></div>
+            </dl>
+        </article>
+
+        <article class="card">
+            <h2>Статистика</h2>
+            <dl>
+                <div><dt>Оборотов уровней</dt><dd id="statLevelCycles">—</dd></div>
+                <div><dt>Сделок</dt><dd id="statFills">—</dd></div>
+                <div><dt>Циклов по тейку</dt><dd id="statTake">—</dd></div>
+                <div><dt>Циклов по стопу</dt><dd id="statStop">—</dd></div>
+                <div><dt>Макс. просадка</dt><dd id="statDrawdown" class="num">—</dd></div>
+            </dl>
+        </article>
+    </section>
+
+    <section class="panel">
+        <h2>Уровни сетки</h2>
+        <div class="table-wrap">
+            <table id="levels">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Цена</th>
+                    <th>Объём</th>
+                    <th>Состояние</th>
+                    <th>Залито</th>
+                    <th>Цена залива</th>
+                    <th>Тейк-профит</th>
+                    <th>Оборотов</th>
+                    <th>Результат</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </section>
+
+    <div class="split">
+        <section class="panel">
+            <h2>Заявки в рынке</h2>
+            <div class="table-wrap">
+                <table id="orders">
+                    <thead>
+                    <tr>
+                        <th>Назначение</th>
+                        <th>Уровень</th>
+                        <th>Сторона</th>
+                        <th>Тип</th>
+                        <th>Цена</th>
+                        <th>Объём</th>
+                        <th>Исполнено</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="panel">
+            <h2>Лента событий</h2>
+            <ul id="events" class="events"></ul>
+        </section>
+    </div>
+
+    <section class="panel">
+        <h2>Настройки</h2>
+        <p class="hint">
+            Все параметры задаются в <code>appsettings.json</code> и читаются при старте процесса.
+            Ключи API лучше передавать через переменные окружения
+            <code>Bybit__ApiKey</code> и <code>Bybit__ApiSecret</code>.
+        </p>
+        <pre id="settings" class="settings">загрузка…</pre>
+    </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

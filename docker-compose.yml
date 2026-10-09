@@ -1,0 +1,29 @@
+services:
+  bot:
+    build: .
+    image: simpletradebot:latest
+    container_name: simpletradebot
+    restart: unless-stopped
+
+    ports:
+      - "5080:8080"
+
+    environment:
+      # Площадка: DemoTrading (по умолчанию), Testnet или Live.
+      Bybit__Environment: DemoTrading
+
+      # Ключи — только через окружение, не через appsettings.json.
+      # Положите их в файл .env рядом с этим compose (см. .env.example).
+      Bybit__ApiKey: ${BYBIT_API_KEY:-}
+      Bybit__ApiSecret: ${BYBIT_API_SECRET:-}
+
+      # Любой параметр из appsettings.json перекрывается так же:
+      # секции разделяются двойным подчёркиванием.
+      Bot__Symbol: ${BOT_SYMBOL:-BTCUSDT}
+      Bot__AutoStart: "false"
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
