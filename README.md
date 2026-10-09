@@ -1,0 +1,2 @@
+# SimpleTradeBot
+Simple Grid Bot
